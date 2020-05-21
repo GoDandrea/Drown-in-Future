@@ -18,17 +18,11 @@ var mouseposGlobal = Vector2()
 var is_dragging = false
 var move_to_point = Vector2()
 
-signal area_selected
-signal start_move_selection
-
 
 func _process(delta):
 	
-	if Input.is_action_just_pressed("ui_accept"):
-		print(global_transform.basis.get_euler(), father_rot)
-	
 	var m_pos = get_viewport().get_mouse_position()
-	calc_move(m_pos, delta)
+	calc_move(m_pos)
 	
 	#zoom in
 	size = lerp(size, size * zoomfactor, zoomspeed * delta)
@@ -37,7 +31,7 @@ func _process(delta):
 	if not zooming:
 		zoomfactor = 1.0
 
-func calc_move(m_pos, delta):
+func calc_move(m_pos):
 	var v_size = get_viewport().size
 	var move_vec = Vector2()
 	if m_pos.x < MOVE_MARGIN:
@@ -51,7 +45,7 @@ func calc_move(m_pos, delta):
 	move_vec *= MOVE_SPEED
 	
 	var g_rotation = global_transform.basis.get_euler()
-	if not ((rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) > 15 + father_rot) or (rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) < -15 + father_rot)):
+	if not ((rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) > 40 + father_rot) or (rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) < -40 + father_rot)):
 		global_rotate(Vector3(0,1,0), -rad2deg(move_vec.x))
 	if not ((rotation_degrees[0] + 100*-rad2deg(move_vec.y) > 10) or (rotation_degrees[0] + 100*-rad2deg(move_vec.y) < -75)):
 		rotate_object_local(Vector3(1,0,0), -rad2deg(move_vec.y))
@@ -61,9 +55,9 @@ func _input(event):
 		if event.is_pressed():
 			zooming = true
 			if event.button_index == BUTTON_WHEEL_UP:
-				zoomfactor -= 0.01 * zoomspeed
+				zoomfactor -= 0.05 * zoomspeed
 			if event.button_index == BUTTON_WHEEL_DOWN:
-				zoomfactor += 0.01 * zoomspeed
+				zoomfactor += 0.05 * zoomspeed
 		else:
 			zooming = false
 	

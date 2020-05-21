@@ -1,7 +1,7 @@
 extends Spatial
 
 const MOVE_MARGIN = 20
-const MOVE_SPEED = 0.005
+const MOVE_SPEED = 0.0005
 
 var team = 0
 var selected_units = []
@@ -13,7 +13,11 @@ onready var cam = $Camera
 
 func _process(_delta):
 	
+	if Input.is_action_just_pressed("ui_accept"):
+		print(rotation_degrees)
+
 	var m_pos = get_viewport().get_mouse_position()
+	calc_move()
 	if Input.is_action_just_pressed("main_command"):
 		move_selected_units(m_pos)
 	if Input.is_action_just_pressed("alt_command"):
@@ -29,14 +33,20 @@ func _process(_delta):
 		
 	$Camera.father_rot = rotation_degrees[1]
 		
-		#smooth movement
-	var inpx = (int(Input.is_action_pressed("ui_right"))
-	                   - int(Input.is_action_pressed("ui_left")))
-	var inpy = (int(Input.is_action_pressed("ui_down"))
-	                   - int(Input.is_action_pressed("ui_up")))
-	#position.x = lerp(position.x, position.x + inpx *speed * zoom.x,speed * delta)
-	#position.y = lerp(position.y, position.y + inpy *speed * zoom.y,speed * delta)
+		
 	
+func calc_move():
+	#smooth movement
+	var move_vec = Vector2()
+	move_vec.x = (int(Input.is_action_pressed("ui_right"))
+	                   - int(Input.is_action_pressed("ui_left")))
+	move_vec.y = (int(Input.is_action_pressed("ui_up"))
+	                   - int(Input.is_action_pressed("ui_down")))
+	move_vec *= MOVE_SPEED
+	
+	global_rotate(Vector3(0,1,0), -rad2deg(move_vec.x))
+	if not ((rotation_degrees[0] + 100*-rad2deg(move_vec.y) > -5) or (rotation_degrees[0] + 100*-rad2deg(move_vec.y) < -75)):
+		rotate_object_local(Vector3(1,0,0), -rad2deg(move_vec.y))
 
 
 	
