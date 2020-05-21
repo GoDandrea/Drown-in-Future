@@ -1,7 +1,7 @@
 extends Spatial
 
 const MOVE_MARGIN = 20
-const MOVE_SPEED = 0.0005
+const MOVE_SPEED = 0.005
 
 var team = 0
 var selected_units = []
@@ -11,11 +11,9 @@ var start_sel_pos = Vector2()
 const ray_length = 1000
 onready var cam = $Camera
 
-func _process(delta):
+func _process(_delta):
+	
 	var m_pos = get_viewport().get_mouse_position()
-	calc_move(m_pos, delta)
-	if Input.is_action_just_pressed("ui_accept"):
-		print(rotation_degrees[0])
 	if Input.is_action_just_pressed("main_command"):
 		move_selected_units(m_pos)
 	if Input.is_action_just_pressed("alt_command"):
@@ -28,22 +26,16 @@ func _process(delta):
 		selection_box.is_visible = false
 	if Input.is_action_just_released("alt_command"):
 		select_units(m_pos)
+		
+		#smooth movement
+	var inpx = (int(Input.is_action_pressed("ui_right"))
+	                   - int(Input.is_action_pressed("ui_left")))
+	var inpy = (int(Input.is_action_pressed("ui_down"))
+	                   - int(Input.is_action_pressed("ui_up")))
+	#position.x = lerp(position.x, position.x + inpx *speed * zoom.x,speed * delta)
+	#position.y = lerp(position.y, position.y + inpy *speed * zoom.y,speed * delta)
+	
 
-func calc_move(m_pos, delta):
-	var v_size = get_viewport().size
-	var move_vec = Vector2()
-	if m_pos.x < MOVE_MARGIN:
-		move_vec.x -= 1
-	if m_pos.y < MOVE_MARGIN:
-		move_vec.y -= 1
-	if m_pos.x > v_size.x - MOVE_MARGIN:
-		move_vec.x += 1
-	if m_pos.y > v_size.y - MOVE_MARGIN:
-		move_vec.y += 1
-	move_vec *= MOVE_SPEED
-	rotate_y(rad2deg(move_vec.x))
-	if not ((rotation_degrees[0] + 100*rad2deg(move_vec.y) > 0) or (rotation_degrees[0] + 100*rad2deg(move_vec.y) < -85)):
-		rotate_object_local(Vector3(1,0,0), rad2deg(move_vec.y))
 
 	
 func raycast_from_mouse(m_pos, collision_mask):
