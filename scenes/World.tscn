@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://CamBase.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Unit.tscn" type="PackedScene" id=2]
@@ -21,6 +21,11 @@ data = PoolVector3Array( 1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0,
 
 [sub_resource type="ConvexPolygonShape" id=6]
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
+
+[sub_resource type="CylinderMesh" id=7]
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 0.133333, 0.0862745, 0.705882, 1 )
 
 [node name="World" type="Spatial"]
 
@@ -97,6 +102,11 @@ material/0 = ExtResource( 4 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/MeshInstance5/StaticBody"]
 shape = SubResource( 6 )
+
+[node name="Placeholder" type="MeshInstance" parent="Navigation/NavigationMeshInstance"]
+transform = Transform( 4, 0, 0, 0, 100, 0, 0, 0, 4, 0, 100, 0 )
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
 
 [node name="Unit" parent="Navigation" instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -27.2568, 0, 45.8155 )
