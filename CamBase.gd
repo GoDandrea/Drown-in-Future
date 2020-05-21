@@ -27,6 +27,8 @@ func _process(_delta):
 	if Input.is_action_just_released("alt_command"):
 		select_units(m_pos)
 		
+	$Camera.father_rot = rotation_degrees[1]
+		
 		#smooth movement
 	var inpx = (int(Input.is_action_pressed("ui_right"))
 	                   - int(Input.is_action_pressed("ui_left")))

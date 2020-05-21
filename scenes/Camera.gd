@@ -11,12 +11,10 @@ var zoomMin = 32
 var zoomMax = 128
 var zooming = false
 
-var tiltMin = 200.0
-var tiltMax = 200.0
+var father_rot
 
 var mousepos = Vector2()
 var mouseposGlobal = Vector2()
-var tilt = 0
 var is_dragging = false
 var move_to_point = Vector2()
 
@@ -27,7 +25,7 @@ signal start_move_selection
 func _process(delta):
 	
 	if Input.is_action_just_pressed("ui_accept"):
-		print(rotation_degrees)
+		print(global_transform.basis.get_euler(), father_rot)
 	
 	var m_pos = get_viewport().get_mouse_position()
 	calc_move(m_pos, delta)
@@ -52,8 +50,10 @@ func calc_move(m_pos, delta):
 		move_vec.y += 0.1
 	move_vec *= MOVE_SPEED
 	
-	global_rotate(Vector3(0,1,0), -rad2deg(move_vec.x))
-	if not ((rotation_degrees[0] + 100*-rad2deg(move_vec.y) > 10) or (rotation_degrees[0] + 100*-rad2deg(move_vec.y) < -85)):
+	var g_rotation = global_transform.basis.get_euler()
+	if not ((rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) > 15 + father_rot) or (rad2deg(g_rotation[1]) + 100*-rad2deg(move_vec.x) < -15 + father_rot)):
+		global_rotate(Vector3(0,1,0), -rad2deg(move_vec.x))
+	if not ((rotation_degrees[0] + 100*-rad2deg(move_vec.y) > 10) or (rotation_degrees[0] + 100*-rad2deg(move_vec.y) < -75)):
 		rotate_object_local(Vector3(1,0,0), -rad2deg(move_vec.y))
 
 func _input(event):
